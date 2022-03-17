@@ -4,8 +4,8 @@ provider "aws" {
 }
 
 provider "databricks" {
-  host  = "https://dbc-8c8038b8-0e28.cloud.databricks.com"
-  token = "dapi41cd7e0b12ed6d43e9183d62513335c6"
+  host  = ""
+  token = ""
 }
 
 terraform {

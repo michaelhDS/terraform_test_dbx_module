@@ -1,10 +1,71 @@
-resource "aws_s3_bucket_policy" "bucket_policy" {
-  # for_each = toset(local.sid)
-  # for_each = toset(local.bucket_name)
 
-  bucket = "mmb-test1-mh"
-  policy = var.s3_policy
+
+locals {
+  data_combine = [for i in data.aws_iam_policy_document.bucket_policy : i.json]
 }
+
+
+data "aws_iam_policy_document" "bucket_policy" {
+
+  count = length(var.s3_bucket)
+
+  statement {
+    sid       = var.s3_bucket[count.index].statement.sid
+    effect    = var.s3_bucket[count.index].statement.effect
+    resources = var.s3_bucket[count.index].statement.resources
+    actions   = var.s3_bucket[count.index].statement.actions
+
+    principals {
+      type        = "AWS"
+      identifiers = var.s3_bucket[count.index].statement.principals_identifiers
+    }
+  }
+}
+
+data "aws_iam_policy_document" "combined" {
+  source_policy_documents = local.data_combine
+}
+
+resource "aws_s3_bucket_policy" "bucket_policy" {
+  bucket = var.bucket_name
+  policy = data.aws_iam_policy_document.combined.json
+}
+
+
+
+
+
+
+
+
+
+
+
+# resource "aws_s3_bucket_policy" "bucket_policy" {
+#   # for_each = toset(local.sid)
+#   for_each = toset(local.buckets_name)
+
+#   bucket = each.value
+#   policy = data.aws_iam_policy_document.bucket_policy[each.key].json
+# }
+
+# data "aws_iam_policy_document" "bucket_policy" {
+
+#   for_each = toset(local.buckets_name)
+
+
+#   statement {
+#     sid       = local.buckets_name_statements[each.key].sid
+#     effect    = local.buckets_name_statements[each.key].effect
+#     resources = local.buckets_name_statements[each.key].resources
+#     actions   = local.buckets_name_statements[each.key].actions
+
+#     principals {
+#       type        = "AWS"
+#       identifiers = local.buckets_name_statements[each.key].principals_identifiers
+#     }
+#   }
+# }
 
 # data "aws_iam_policy_document" "combined" {
 #   for_each = toset(local.sid)

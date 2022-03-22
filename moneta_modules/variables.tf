@@ -37,30 +37,20 @@ variable "users" {
 }
 
 
-
-variable "s3_bucket" {
+variable "s3_bucket_policy" {
 
   type = list(object({
     bucket_name = string
     statements = list(object({
       statement = object({
-        sid       = string
-        effect    = string
-        resources = list(string)
-        actions   = list(string)
-        principals = object({
-          type        = string
-          identifiers = list(string)
-        })
+        sid                    = string
+        effect                 = string
+        resources              = list(string)
+        actions                = list(string)
+        principals_identifiers = list(string)
       })
     }))
   }))
 
   default = []
-}
-
-
-variable "s3_policy" {
-  type    = string
-  default = ""
 }

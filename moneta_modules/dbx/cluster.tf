@@ -19,7 +19,16 @@ resource "databricks_cluster" "cluster" {
     min_workers = local.cluster_name_min_workers[each.key]
     max_workers = local.cluster_name_max_workers[each.key]
   }
+
+  aws_attributes {
+    instance_profile_arn   = "arn:aws:iam::029825596798:instance-profile/DataLakeIAMRolesStack-slrdbxdtldevgeneralDTLInstanceProfile-LDB1UYJDP8WH"
+  }
 }
+
+# resource "databricks_instance_profile" "shared" {
+#   instance_profile_arn = "arn:aws:iam::029825596798:instance-profile/DataLakeIAMRolesStack-slrdbxdtldevgeneralDTLInstanceProfile-LDB1UYJDP8WH"
+# }
+
 
 resource "databricks_permissions" "cluster_usage" {
 

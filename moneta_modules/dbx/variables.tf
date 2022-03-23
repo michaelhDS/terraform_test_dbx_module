@@ -10,11 +10,13 @@ variable "user_groups" {
 
 variable "clusters" {
   type = list(object({
-    cluster_name     = string
-    min_workers      = number
-    max_workers      = number
-    permission_level = string
-    user_group       = string
+    cluster_name         = string
+    min_workers          = number
+    max_workers          = number
+    permission_level     = string
+    user_group           = string
+    instance_profile_arn = string
+
 
   }))
   default = []
@@ -47,10 +49,11 @@ locals {
 }
 
 locals {
-  cluster_name                  = [for i in var.clusters : i.cluster_name]
-  cluster_name_min_workers      = { for i in var.clusters : i.cluster_name => i.min_workers }
-  cluster_name_max_workers      = { for i in var.clusters : i.cluster_name => i.max_workers }
-  cluster_name_permission_level = { for i in var.clusters : i.cluster_name => i.permission_level }
-  cluster_name_user_group       = { for i in var.clusters : i.cluster_name => i.user_group }
+  cluster_name                      = [for i in var.clusters : i.cluster_name]
+  cluster_name_min_workers          = { for i in var.clusters : i.cluster_name => i.min_workers }
+  cluster_name_max_workers          = { for i in var.clusters : i.cluster_name => i.max_workers }
+  cluster_name_permission_level     = { for i in var.clusters : i.cluster_name => i.permission_level }
+  cluster_name_user_group           = { for i in var.clusters : i.cluster_name => i.user_group }
+  cluster_name_instance_profile_arn = { for i in var.clusters : i.cluster_name => i.instance_profile_arn }
 
 }

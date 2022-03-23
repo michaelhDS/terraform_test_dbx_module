@@ -21,7 +21,7 @@ resource "databricks_cluster" "cluster" {
   }
 
   aws_attributes {
-    instance_profile_arn   = "arn:aws:iam::029825596798:instance-profile/DataLakeIAMRolesStack-slrdbxdtldevgeneralDTLInstanceProfile-LDB1UYJDP8WH"
+    instance_profile_arn = local.cluster_name_instance_profile_arn[each.key]
   }
 }
 

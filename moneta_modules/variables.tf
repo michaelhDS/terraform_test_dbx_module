@@ -10,11 +10,12 @@ variable "user_groups" {
 
 variable "clusters" {
   type = list(object({
-    cluster_name     = string
-    min_workers      = number
-    max_workers      = number
-    permission_level = string
-    user_group       = string
+    cluster_name         = string
+    min_workers          = number
+    max_workers          = number
+    permission_level     = string
+    user_group           = string
+    instance_profile_arn = string
 
   }))
   default = []

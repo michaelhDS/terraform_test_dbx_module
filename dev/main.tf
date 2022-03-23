@@ -30,19 +30,21 @@ module "buckets" {
 variable "clusters" {
 
   type = list(object({
-    cluster_name     = string
-    min_workers      = number
-    max_workers      = number
-    permission_level = string
-    user_group       = string
+    cluster_name         = string
+    min_workers          = number
+    max_workers          = number
+    permission_level     = string
+    user_group           = string
+    instance_profile_arn = string
   }))
   default = [
     {
-      cluster_name     = "lyzari"
-      min_workers      = 1
-      max_workers      = 2
-      permission_level = "CAN_ATTACH_TO"
-      user_group       = "lyzari"
+      cluster_name         = "lyzari"
+      min_workers          = 1
+      max_workers          = 2
+      permission_level     = "CAN_MANAGE"
+      user_group           = "lyzari"
+      instance_profile_arn = "arn:aws:iam::029825596798:instance-profile/DataLakeIAMRolesStack-slrdbxdtldevsolutiongroupdemoInstanceProfile-CG4IB8PT30N2"
     }
   ]
 
@@ -58,13 +60,13 @@ module "moneta_modules" {
   # s3_policy = module.buckets.bucket_mmb-test1-mh
 
 
-  # user_groups = [
-  #   {
-  #     display_name               = "lyzari"
-  #     allow_cluster_create       = true
-  #     allow_instance_pool_create = true
-  #   }
-  # ]
+  user_groups = [
+    {
+      display_name               = "lyzari"
+      allow_cluster_create       = true
+      allow_instance_pool_create = true
+    }
+  ]
 
   # users = [
   #   {
@@ -72,10 +74,9 @@ module "moneta_modules" {
   #     solution_group = "lyzari"
   # }]
 
-  # clusters = [
-  #   for i in var.clusters : i
-
-  # ]
+  clusters = [
+    for i in var.clusters : i
+  ]
 
   # secret_scopes = [
   #   {
@@ -84,7 +85,7 @@ module "moneta_modules" {
   # ]
 
   s3_bucket_policy = [
-    { bucket_name = "monorepo-testing2-mh"
+    { bucket_name = "dtldev-lyzari-xxw"
       statements = [
         {
           statement = {
@@ -92,127 +93,193 @@ module "moneta_modules" {
             effect = "Allow"
 
             resources = [
-              "arn:aws:s3:::monorepo-testing2-mh/test2/*",
-              "arn:aws:s3:::monorepo-testing2-mh/test2",
+              "arn:aws:s3:::dtldev-lyzari-xxw/lyzari1/*",
+              "arn:aws:s3:::dtldev-lyzari-xxw/lyzari1",
             ]
 
             actions = ["s3:GetObject"]
 
             principals_identifiers = [
-              "arn:aws:iam::554025156005:role/testing-monorepo-mh"
+              "arn:aws:iam::029825596798:role/slr_dbx_dtldevsolution_group_demo"
             ]
           }
         },
-        {
-          statement = {
-            sid    = "lyzari2"
-            effect = "Allow"
 
-            resources = [
-              "arn:aws:s3:::monorepo-testing2-mh/test/*",
-              "arn:aws:s3:::monorepo-testing2-mh/test",
-            ]
+        # {
+        #   statement = {
+        #     sid    = "lyzari1_cyklisti1"
+        #     effect = "Allow"
 
-            actions = ["s3:GetObject"]
+        #     resources = [
+        #       "arn:aws:s3:::dtldev-lyzari-xxw/cyklisti1/*",
+        #       "arn:aws:s3:::dtldev-lyzari-xxw/cyklisti1",
+        #     ]
 
-            principals_identifiers = [
-              "arn:aws:iam::554025156005:role/testing-monorepo-mh"
-            ]
-          }
-        }
+        #     actions = ["s3:GetObject"]
 
+        #     principals_identifiers = [
+        #       "arn:aws:iam::029825596798:role/slr_dbx_dtldevsolution_group_demo"
+        #     ]
+        #   }
+        # }
       ]
-    },
-
-    {
-      bucket_name = "monorepo-testing3-mh"
-      statements = [
-        {
-          statement = {
-            sid    = "testing3-lyzari1"
-            effect = "Allow"
-
-            resources = [
-              "arn:aws:s3:::monorepo-testing3-mh/test2/*",
-              "arn:aws:s3:::monorepo-testing3-mh/test2",
-            ]
-
-            actions = ["s3:GetObject"]
-
-            principals_identifiers = [
-              "arn:aws:iam::554025156005:role/testing-monorepo-mh"
-            ]
-          }
-        },
-        {
-          statement = {
-            sid    = "testing3-lyzari2"
-            effect = "Allow"
-
-            resources = [
-              "arn:aws:s3:::monorepo-testing3-mh/test/*",
-              "arn:aws:s3:::monorepo-testing3-mh/test",
-            ]
-
-            actions = ["s3:GetObject"]
-
-            principals_identifiers = [
-              "arn:aws:iam::554025156005:role/testing-monorepo-mh"
-            ]
-          }
-        }
-
-      ]
-
-    },
-
-
-
-    {
-      bucket_name = "monorepo-testing4-mh"
-      statements = [
-        {
-          statement = {
-            sid    = "testing4-lyzari1"
-            effect = "Allow"
-
-            resources = [
-              "arn:aws:s3:::monorepo-testing4-mh/test2/*",
-              "arn:aws:s3:::monorepo-testing4-mh/test2",
-            ]
-
-            actions = ["s3:GetObject"]
-
-            principals_identifiers = [
-              "arn:aws:iam::554025156005:role/testing-monorepo-mh"
-            ]
-          }
-        },
-        {
-          statement = {
-            sid    = "testing4-lyzari2"
-            effect = "Allow"
-
-            resources = [
-              "arn:aws:s3:::monorepo-testing4-mh/test/*",
-              "arn:aws:s3:::monorepo-testing4-mh/test",
-            ]
-
-            actions = ["s3:GetObject"]
-
-            principals_identifiers = [
-              "arn:aws:iam::554025156005:role/testing-monorepo-mh"
-            ]
-          }
-        }
-
-      ]
-
     }
-
-
   ]
 
+
+  # s3_bucket = [{
+  #   bucket_name = "dtldev-lyzari-xxw"
+  #   statements = [{
+  #     statement = {
+  #       sid    = "lyzari1"
+  #       effect = "Allow"
+
+  #       resources = [
+  #         "arn:aws:s3:::dtldev-lyzari-xxw/lyzari1/*",
+  #         "arn:aws:s3:::dtldev-lyzari-xxw/lyzari1",
+  #       ]
+
+  #       actions = ["s3:GetObject"]
+
+  #       principals = {
+  #         type = "AWS"
+
+  #         identifiers = [
+  #           "arn:aws:iam::029825596798:instance-profile/DataLakeIAMRolesStack-slrdbxdtldevgeneralDTLInstanceProfile-LDB1UYJDP8WH"
+  #         ]
+  #       }
+  #     }
+  #   }]
+  #   }
+  # ]
+
+
+  #  s3_bucket_policy = [
+  #     { bucket_name = "monorepo-testing2-mh"
+  #       statements = [
+  #         {
+  #           statement = {
+  #             sid    = "lyzari1"
+  #             effect = "Allow"
+
+  #             resources = [
+  #               "arn:aws:s3:::monorepo-testing2-mh/test2/*",
+  #               "arn:aws:s3:::monorepo-testing2-mh/test2",
+  #             ]
+
+  #             actions = ["s3:GetObject"]
+
+  #             principals_identifiers = [
+  #               "arn:aws:iam::554025156005:role/testing-monorepo-mh"
+  #             ]
+  #           }
+  #         },
+  #         {
+  #           statement = {
+  #             sid    = "lyzari2"
+  #             effect = "Allow"
+
+  #             resources = [
+  #               "arn:aws:s3:::monorepo-testing2-mh/test/*",
+  #               "arn:aws:s3:::monorepo-testing2-mh/test",
+  #             ]
+
+  #             actions = ["s3:GetObject"]
+
+  #             principals_identifiers = [
+  #               "arn:aws:iam::554025156005:role/testing-monorepo-mh"
+  #             ]
+  #           }
+  #         }
+
+  #       ]
+  #     },
+
+  #     {
+  #       bucket_name = "monorepo-testing3-mh"
+  #       statements = [
+  #         {
+  #           statement = {
+  #             sid    = "testing3-lyzari1"
+  #             effect = "Allow"
+
+  #             resources = [
+  #               "arn:aws:s3:::monorepo-testing3-mh/test2/*",
+  #               "arn:aws:s3:::monorepo-testing3-mh/test2",
+  #             ]
+
+  #             actions = ["s3:GetObject"]
+
+  #             principals_identifiers = [
+  #               "arn:aws:iam::554025156005:role/testing-monorepo-mh"
+  #             ]
+  #           }
+  #         },
+  #         {
+  #           statement = {
+  #             sid    = "testing3-lyzari2"
+  #             effect = "Allow"
+
+  #             resources = [
+  #               "arn:aws:s3:::monorepo-testing3-mh/test/*",
+  #               "arn:aws:s3:::monorepo-testing3-mh/test",
+  #             ]
+
+  #             actions = ["s3:GetObject"]
+
+  #             principals_identifiers = [
+  #               "arn:aws:iam::554025156005:role/testing-monorepo-mh"
+  #             ]
+  #           }
+  #         }
+
+  #       ]
+
+  #     },
+
+
+
+  #     {
+  #       bucket_name = "monorepo-testing4-mh"
+  #       statements = [
+  #         {
+  #           statement = {
+  #             sid    = "testing4-lyzari1"
+  #             effect = "Allow"
+
+  #             resources = [
+  #               "arn:aws:s3:::monorepo-testing4-mh/test2/*",
+  #               "arn:aws:s3:::monorepo-testing4-mh/test2",
+  #             ]
+
+  #             actions = ["s3:GetObject"]
+
+  #             principals_identifiers = [
+  #               "arn:aws:iam::554025156005:role/testing-monorepo-mh"
+  #             ]
+  #           }
+  #         },
+  #         {
+  #           statement = {
+  #             sid    = "testing4-lyzari2"
+  #             effect = "Allow"
+
+  #             resources = [
+  #               "arn:aws:s3:::monorepo-testing4-mh/test/*",
+  #               "arn:aws:s3:::monorepo-testing4-mh/test",
+  #             ]
+
+  #             actions = ["s3:GetObject"]
+
+  #             principals_identifiers = [
+  #               "arn:aws:iam::554025156005:role/testing-monorepo-mh"
+  #             ]
+  #           }
+  #         }
+
+  #       ]
+
+  #     }
 
   # s3_bucket = [{
   #   bucket_name = "dtldev-lyzari-xxw"
@@ -273,32 +340,6 @@ module "moneta_modules" {
   # ]
 
 
-
-  # s3_bucket = [{
-  #   bucket_name = "dtldev-lyzari-xxw"
-  #   statements = [{
-  #     statement = {
-  #       sid    = "lyzari1"
-  #       effect = "Allow"
-
-  #       resources = [
-  #         "arn:aws:s3:::dtldev-lyzari-xxw/lyzari1/*",
-  #         "arn:aws:s3:::dtldev-lyzari-xxw/lyzari1",
-  #       ]
-
-  #       actions = ["s3:GetObject"]
-
-  #       principals = {
-  #         type = "AWS"
-
-  #         identifiers = [
-  #           "arn:aws:iam::029825596798:instance-profile/DataLakeIAMRolesStack-slrdbxdtldevgeneralDTLInstanceProfile-LDB1UYJDP8WH"
-  #         ]
-  #       }
-  #     }
-  #   }]
-  #   }
-  # ]
 
 
 }

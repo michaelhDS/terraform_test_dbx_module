@@ -1,7 +1,7 @@
 
 
 locals {
-  data_combine = [for i in data.aws_iam_policy_document.bucket_policy : i.json]
+  data_combine_s3 = [for i in data.aws_iam_policy_document.bucket_policy : i.json]
 }
 
 
@@ -22,13 +22,13 @@ data "aws_iam_policy_document" "bucket_policy" {
   }
 }
 
-data "aws_iam_policy_document" "combined" {
-  source_policy_documents = local.data_combine
+data "aws_iam_policy_document" "combined_s3" {
+  source_policy_documents = local.data_combine_s3
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = var.bucket_name
-  policy = data.aws_iam_policy_document.combined.json
+  policy = data.aws_iam_policy_document.combined_s3.json
 }
 
 
